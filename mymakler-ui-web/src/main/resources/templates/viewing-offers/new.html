@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="layout_fragments :: head('MyMakler - New viewing offer')"></head>
+
+<body>
+<nav th:replace="layout_fragments :: nav('new_offer')"></nav>
+
+<main role="main" class="container">
+    <h3 class="mb-4">New viewing offer</h3>
+
+    <form class="mx-auto col-sm-10" th:object="${offer}" th:action="@{/viewing-offers/create}" method="post">
+        <h3 class="mb-4"></h3>
+
+        <div class="form-group row">
+            <label for="title" class="col-sm-2 col-form-label">Title</label>
+            <input id="title"
+                   th:field="*{title}"
+                   class="form-control col-sm-10"
+                   th:classappend="${#fields.hasErrors('title')} ? is-invalid : ''"
+                   type="text"
+                   required>
+            <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="invalid-feedback">error</div>
+        </div>
+
+        <div class="form-group row">
+            <label for="description" class="col-sm-2 col-form-label">Description</label>
+            <input id="description"
+                   th:field="*{description}"
+                   class="form-control col-sm-10"
+                   th:classappend="${#fields.hasErrors('description')} ? is-invalid : ''"
+                   type="text"
+                   required>
+            <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="invalid-feedback">
+                error
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="sqMeters" class="col-sm-2 col-form-label">Sq Meters</label>
+            <input id="sqMeters"
+                   th:field="*{sqMeters}"
+                   class="form-control col-sm-10"
+                   th:classappend="${#fields.hasErrors('sqMeters')} ? is-invalid : ''"
+                   type="number">
+            <div th:if="${#fields.hasErrors('sqMeters')}" th:errors="*{sqMeters}" class="invalid-feedback">error</div>
+        </div>
+
+        <div class="form-group row">
+            <label for="city" class="col-sm-2 col-form-label">City</label>
+            <input id="city"
+                   th:field="*{city}"
+                   class="form-control col-sm-10"
+                   th:classappend="${#fields.hasErrors('city')} ? is-invalid : ''"
+                   type="text"
+                   required>
+            <div th:if="${#fields.hasErrors('city')}" th:errors="*{city}" class="invalid-feedback">error</div>
+        </div>
+
+        <div class="form-group row">
+            <label for="street" class="col-sm-2 col-form-label">Street</label>
+            <input id="street"
+                   th:field="*{street}"
+                   class="form-control col-sm-10"
+                   th:classappend="${#fields.hasErrors('street')} ? is-invalid : ''"
+                   type="text"
+                   required>
+            <div th:if="${#fields.hasErrors('street')}" th:errors="*{street}" class="invalid-feedback">error</div>
+        </div>
+
+        <div class="form-group row">
+            <label for="postalCode" class="col-sm-2 col-form-label">Postal Code</label>
+            <input id="postalCode"
+                   th:field="*{postalCode}"
+                   class="form-control col-sm-10"
+                   th:classappend="${#fields.hasErrors('postalCode')} ? is-invalid : ''"
+                   type="text"
+                   required>
+            <div th:if="${#fields.hasErrors('postalCode')}" th:errors="*{postalCode}" class="invalid-feedback">error
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="viewingDate" class="col-sm-2 col-form-label">Viewing Date</label>
+            <input id="viewingDate"
+                   th:field="*{viewingDate}"
+                   class="form-control col-sm-10"
+                   th:classappend="${#fields.hasErrors('viewingDate')} ? is-invalid : ''"
+                   type="text"
+                   placeholder="Input like dd-MM-yyyy HH:mm"
+                   required>
+            <div th:if="${#fields.hasErrors('viewingDate')}" th:errors="*{viewingDate}" class="invalid-feedback">
+                error
+            </div>
+        </div>
+
+        <div class="form-group row float-right">
+            <button type="submit" class="btn btn-primary">Create Offer</button>
+        </div>
+    </form>
+</main>
+
+<footer th:replace="layout_fragments :: footer"></footer>
+</body>
+</html>

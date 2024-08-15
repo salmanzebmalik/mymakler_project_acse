@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="layout_fragments :: head('MyMakler - Viewing Request')"></head>
+
+<body>
+<nav th:replace="layout_fragments :: nav('overview')"></nav>
+
+<main role="main" class="container">
+    <h3 class="mb-4">Viewing Request</h3>
+
+    <div th:if="${param.accepted}" class="alert alert-dissmissible alert-success fade show">
+        You have successfully accepted a request.
+        <button type="button" class="close" data-dismiss="alert">
+            <a>&times;</a>
+        </button>
+    </div>
+    <div th:if="${param.declined}" class="alert alert-dissmissible alert-success">
+        You have successfully declined a request.
+        <button type="button" class="close" data-dismiss="alert">
+            <a>&times;</a>
+        </button>
+    </div>
+
+    <p th:if="${#lists.isEmpty(untreated)}" class="table">There are no viewing request for your offers</p>
+    <table th:unless="${#lists.isEmpty(untreated)}" class="table">
+        <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Offer Details</th>
+            <th scope="col">Username</th>
+            <th scope="col">User Attributes</th>
+            <th scope="col">User Description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="rq : ${untreated}">
+            <td th:text="${rq.requestedOffer.title}">Title</td>
+            <td scope="col" sec:authorize="isAuthenticated()">
+                <a class="btn btn-primary" th:href="@{/viewing-offers/{id}(id=${rq.requestedOffer.id})}" role="button">Show offer details</a>
+            </td>
+            <td th:text="${rq.requestingUser.username}">Username</td>
+            <td th:text="${rq.requestingUser.attributes}">
+                User attributes
+            </td>
+            <td th:text="${rq.userDescription}">User Description</td>
+
+            <td scope="col" sec:authorize="isAuthenticated()">
+                <form th:action="@{/viewing-requests/accept}" method="post" class="form-group row">
+                    <input type="hidden" id="requestId" name="requestId" th:value="${rq.id}">
+                    <input type="text" id="offeringUserRemarks" name="offeringUserRemarks" maxlength="40"
+                           placeholder="Any remarks?">
+                    <button type="submit" class="btn btn-primary">Accept</button>
+                </form>
+            </td>
+            <td scope="col" sec:authorize="isAuthenticated()">
+                <form th:action="@{/viewing-requests/decline}" method="post">
+                    <input type="hidden" id="requestId" name="requestId" th:value="${rq.id}">
+                    <button type="submit" class="btn btn-primary">Decline</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+
+<footer th:replace="layout_fragments :: footer"></footer>
+</body>
+</html>

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: artemis
+  namespace: mymakler
+  labels:
+    app: artemis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: artemis
+  template:
+    metadata:
+      labels:
+        app: artemis
+    spec:
+      containers:
+      - name: artemis
+        image: quay.io/artemiscloud/activemq-artemis-broker-kubernetes:artemis.2.35.0
+        env:
+        - name: AMQ_USER
+          value: "admin"
+        - name: AMQ_PASSWORD
+          value: "admin"
+        - name: AMQ_SECURITY_ENABLED
+          value: "false"
+        ports:
+        - containerPort: 8161
+          name: web
+        - containerPort: 61616
+          name: broker
+        readinessProbe:
+            tcpSocket:
+              port: 61616
+            initialDelaySeconds: 10
+            periodSeconds: 15
+        volumeMounts:
+        - name: artemis-data
+          mountPath: /opt/activemq/data
+      volumes:
+      - name: artemis-data
+        persistentVolumeClaim:
+          claimName: artemis

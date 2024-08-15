@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mymakler-svc-api
+  namespace: mymakler
+  labels:
+    app: mymakler-svc-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mymakler-svc-api
+  template:
+    metadata:
+      labels:
+        app: mymakler-svc-api
+    spec:
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox
+          command: ['sh', '-c', 'until nc -z mysql 3306; do echo waiting for mysql; sleep 2; done;']
+        - name: wait-for-artemis
+          image: busybox
+          command: ['sh', '-c', 'until nc -z artemis 61616; do echo waiting for artemis; sleep 2; done;']
+      containers:
+        - name: mymakler-svc-api
+          image: salmanzebmalik/group-04-mymakler-svc-api:0.0.1
+          env:
+            - name: MYSQL_HOST
+              value: mysql.mymakler.svc.cluster.local
+            - name: MYSQL_PORT
+              value: "3306"
+            - name: MYSQL_DB
+              value: mymakler
+            - name: MYSQL_USERNAME
+              value: mymakler
+            - name: MYSQL_PASSWORD
+              value: mymakler
+            - name: ACTIVEMQ_HOST
+              value: artemis.mymakler.svc.cluster.local
+            - name: ACTIVEMQ_PORT
+              value: "61616"
+            - name: ACTIVEMQ_USERNAME
+              value: admin
+            - name: ACTIVEMQ_PASSWORD
+              value: admin
+          ports:
+            - name: http
+              containerPort: 8080
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1024Mi"
+              cpu: "512m"

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="layout_fragments :: head('MyMakler - Login')"></head>
+
+<body>
+<!--
+    Here, we parameterize the layout fragment 'nav' defined in layout_fragments.html to highlight the "login" choice.
+-->
+<nav th:replace="layout_fragments :: nav('login')"></nav>
+
+<main role="main" class="container">
+    <form class="mx-auto col-md-4" th:action="@{/users/login}" method="post">
+        <h1 class="mb-4">Login</h1>
+        <!--
+            param.error is set in de.unims.acse2024.mymakler.web.security.SecurityConfig.java. You can see that it was
+            set by looking at the URL in your browser.
+        -->
+        <div th:if="${param.error}" class="alert alert-danger" role="alert">
+            Username or password is incorrect
+            <button type="button" class="close" data-dismiss="alert">
+                <a>&times;</a>
+            </button>
+        </div>
+
+        <!--
+            param.logout is set in de.unims.acse2024.mymakler.web.security.SecurityConfig.java
+        -->
+        <div th:if="${param.logout}" class="alert alert-success">
+            You have been logged out.
+            <button type="button" class="close" data-dismiss="alert">
+                <a>&times;</a>
+            </button>
+        </div>
+
+        <div class="form-group">
+            <label for="username" class="sr-only">Username</label>
+            <input id="username"
+                   type="text"
+                   class="form-control"
+                   name="username"
+                   placeholder="Username"
+                   autocomplete="username" required autofocus>
+        </div>
+        <div class="form-group">
+            <label for="password" class="sr-only">Password</label>
+            <input id="password"
+                   type="password"
+                   class="form-control"
+                   name="password"
+                   placeholder="Password"
+                   autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary float-right">Login</button>
+        <!-- Here we can simply directly call /users/register via a link. -->
+        <a href="/users/register" class="float-left">Register</a>
+    </form>
+</main>
+
+<footer th:replace="layout_fragments :: footer"></footer>
+</body>
+</html>

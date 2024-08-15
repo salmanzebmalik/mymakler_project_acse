@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<!--
+    In this file, fragments are defined. These can be reused in other thymeleaf-templates. See, the remaining code
+    (using "th:replace" to insert the fragment) and, e.g., https://www.thymeleaf.org/doc/articles/layouts.html
+-->
+
+<head th:fragment="head (title)">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <title th:text="${title}"></title>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet"/>
+    <link th:href="@{/css/mymakler.css}" type="text/css" rel="stylesheet"/>
+</head>
+<body>
+
+<!--
+    This defines the fragment for a navbar. The navbar is displayed at the top and is parameterizable (see
+    "activeItem": via th:classappend the parameter is used to determine which element of the navbar is highlighted).
+-->
+<nav th:fragment="nav (activeItem)" class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" th:href="@{/}">MyMakler</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="true" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbar">
+        <ul class="navbar-nav mr-auto">
+            <!-- Using 'sec:authorize="isAuthenticated()"' ensures that only logged-in users will get to see this element -->
+            <li class="nav-item" sec:authorize="isAuthenticated()" th:classappend="${activeItem} == 'profile' ? active : ''">
+                <a class="nav-link" th:href="@{/}">Profile</a>
+            </li>
+
+            <li class="nav-item" sec:authorize="!isAuthenticated()" th:classappend="${activeItem} == 'login' ? active : ''">
+                <a class="nav-link" th:href="@{/users/login}">Login</a>
+            </li>
+
+            <li class="nav-item" sec:authorize="isAuthenticated()" th:classappend="${activeItem} == 'overview' ? active : ''">
+                <a class="nav-link" th:href="@{/overview}">Overview</a>
+            </li>
+
+            <!-- The role is defined in de.unims.acse2024.mymakler.data.model.MaklerUser. By using "hasRole('LANDLORD')" only landlords will get to see this item -->
+            <li class="nav-item" sec:authorize="hasRole('LANDLORD')" th:classappend="${activeItem} == 'new_offer' ? active : ''">
+                <a class="nav-link" th:href="@{/viewing-offers/new}">New Viewing Offer</a>
+            </li>
+
+            <li class="nav-item" sec:authorize="isAuthenticated()" th:classappend="${activeItem} == 'appointments' ? active : ''">
+                <a class="nav-link" th:href="@{/appointments}">Appointments</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item ml-auto" sec:authorize="isAuthenticated()">
+                <form method="post" th:action="@{/users/logout}">
+                    <!-- This action is configured in de.unims.acse2024.mymakler.web.security.SecurityConfig.java to trigger a logout. -->
+                    <button class="navbar-button navbar-right" href="#">
+                        <!-- We defined our own css-class to style this element -->
+                        Logout
+                    </button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<main></main>
+
+<footer th:fragment="footer">
+    <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js"
+            integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI="
+            crossorigin="anonymous"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.bundle.js}"></script>
+</footer>
+</body>
+</html>

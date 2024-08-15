@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="layout_fragments :: head('MyMakler - Register')"></head>
+
+<body>
+<nav th:replace="layout_fragments :: nav('login')"></nav>
+
+<main role="main" class="container">
+    <!--
+        We select the newUser-object using "th:object" so that we can access its fields using *{...} Furthermore, we
+        specify that the specified inputs (see below) are to be posted to "/users/create". In consequence, the
+        UserController-method annotated via "@PostMapping("/create")" will be called if this form is submitted.
+    -->
+    <form class="mx-auto col-sm-10" th:object="${newUser}" th:action="@{/users/create}" method="post">
+        <h1 class="mb-4">Sign up for MyMakler!</h1>
+
+        <!--
+            If we make any non-trivial mistakes while submitting the form, we will be rerouted to users/register.html
+            UserControler::create will add the respective error messages.
+        -->
+        <div th:if="${#fields.hasErrors('global')}"
+             th:each="error : ${#fields.errors('global')}"
+             th:text="${error}"
+             class="alert alert-danger" role="alert">
+            global error
+        </div>
+
+        <div class="form-group row">
+            <label for="username" class="col-sm-2 col-form-label">Username</label>
+            <input id="username"
+                   type="text"
+                   th:field="*{username}"
+                   placeholder="Username"
+                   class="form-control col-sm-10"
+                   th:classappend="${#fields.hasErrors('username')} ? is-invalid : ''"
+                   autocomplete="username"
+                   required autofocus>
+            <!--
+                We can display errors specific to different fields of the user. For instance errors in constraints can
+                be displayed.
+            -->
+            <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="invalid-feedback">error</div>
+        </div>
+
+        <div class="form-group row">
+            <label for="email" class="col-sm-2 col-form-label">E-Mail</label>
+            <input id="email"
+                   type="email"
+                   th:field="*{email}"
+                   placeholder="E-Mail"
+                   class="form-control col-sm-10"
+                   th:classappend="${#fields.hasErrors('email')} ? is-invalid : ''"
+                   required>
+            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="invalid-feedback">error</div>
+        </div>
+
+        <div class="form-group row">
+            <label for="plaintextPassword" class="col-sm-2 col-form-label">Password</label>
+            <input id="plaintextPassword"
+                   type="password"
+                   th:field="*{plaintextPassword}"
+                   placeholder="Password"
+                   class="form-control col-sm-10"
+                   th:classappend="${#fields.hasErrors('plaintextPassword')} ? is-invalid : ''"
+                   autocomplete="new-password"
+                   required>
+            <div th:if="${#fields.hasErrors('plaintextPassword')}" th:errors="*{plaintextPassword}" class="invalid-feedback">
+              error
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="cityOfOrigin" class="col-sm-2 col-form-label">City of Origin</label>
+            <input id="cityOfOrigin"
+                   type="text"
+                   th:field="*{cityOfOrigin}"
+                   placeholder="City"
+                   class="form-control col-sm-10"
+                   th:classappend="${#fields.hasErrors('cityOfOrigin')} ? is-invalid : ''"
+                   required>
+            <div th:if="${#fields.hasErrors('cityOfOrigin')}" th:errors="*{cityOfOrigin}" class="invalid-feedback">
+                error
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="attributes" class="col-sm-2 col-form-label">Attributes</label>
+            <input id="attributes"
+                   type="text"
+                   th:field="*{attributes}"
+                   placeholder="Attributes, input like 'nonsmoker,outgoing,...'"
+                   class="form-control col-sm-10"
+                   th:classappend="${#fields.hasErrors('attributes')} ? is-invalid : ''"
+                   required>
+            <div th:if="${#fields.hasErrors('attributes')}" th:errors="*{attributes}" class="invalid-feedback">
+              error
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="attributes" class="col-sm-2 col-form-label">User Role</label>
+            <select th:field=*{role} th:classappend="${#fields.hasErrors('role')} ? is-invalid : ''">
+                <option th:value="LANDLORD" th:text="'I want to rent out'"></option>
+                <option th:value="TENANT" th:text="'I want to rent'"></option>
+            </select>
+            <div th:if="${#fields.hasErrors('role')}" th:errors="*{role}" class="invalid-feedback">error</div>
+        </div>
+
+        <div class="form-group row float-right">
+            <button type="submit" class="btn btn-primary">Register</button>
+        </div>
+    </form>
+</main>
+
+<footer th:replace="layout_fragments :: footer"></footer>
+</body>
+</html>

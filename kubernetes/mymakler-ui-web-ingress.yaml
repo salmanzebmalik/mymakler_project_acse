@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mymakler-ui-web
+  namespace: mymakler
+  annotations:
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+spec:
+  rules:
+  - host: localhost
+    http:
+      paths:
+      - pathType: Prefix
+        path: /
+        backend:
+          service:
+            name: mymakler-ui-web
+            port:
+              number: 8080

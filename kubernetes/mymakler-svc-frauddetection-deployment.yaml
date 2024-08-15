@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mymakler-svc-frauddetection
+  namespace: mymakler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mymakler-svc-frauddetection
+  template:
+    metadata:
+      labels:
+        app: mymakler-svc-frauddetection
+    spec:
+      initContainers:
+        - name: wait-for-artemis
+          image: busybox
+          command: ['sh', '-c', 'until nc -z artemis 61616; do echo waiting for artemis; sleep 2; done;']
+      containers:
+        - name: mymakler-svc-frauddetection
+          image: salmanzebmalik/group-04-mymakler-svc-frauddetection:0.0.1
+          env:
+            - name: ACTIVEMQ_HOST
+              value: artemis.mymakler.svc.cluster.local
+            - name: ACTIVEMQ_PORT
+              value: "61616"
+            - name: ACTIVEMQ_USERNAME
+              value: admin
+            - name: ACTIVEMQ_PASSWORD
+              value: admin
+          ports:
+            - name: http
+              containerPort: 8161
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"

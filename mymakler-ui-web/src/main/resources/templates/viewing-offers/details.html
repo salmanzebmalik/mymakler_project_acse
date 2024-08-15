@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="layout_fragments :: head('MyMakler - Viewing Offer')"></head>
+
+<body>
+<nav th:replace="layout_fragments :: nav('overview')"></nav>
+
+<main role="main" class="container">
+    <h3 class="mb-4">Viewing Offer</h3>
+
+    <div th:object="${offer}" class="col-sm-20">
+        <div class="row mt-3">
+            <div class="col-sm-2"><strong>Email: </strong></div>
+            <div class="col-sm-10" th:text="*{offeringUser.email}">Email</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"><strong>Posted by: </strong></div>
+            <div class="col-sm-10" th:text="*{offeringUser.username}">offering user</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"><strong>Title: </strong></div>
+            <div class="col-sm-10" th:text="*{title}">Title</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"><strong>Description: </strong></div>
+            <div class="col-sm-10" th:text="*{description}">Description</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"><strong>Sq Meters: </strong></div>
+            <div class="col-sm-10" th:text="*{sqMeters}">Sq Meters</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"><strong>City: </strong></div>
+            <div class="col-sm-10" th:text="*{city}">City</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"><strong>Postal Code: </strong></div>
+            <div class="col-sm-10" th:text="*{postalCode}">Postal Code</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"><strong>Street: </strong></div>
+            <div class="col-sm-10" th:text="*{street}">Street</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"><strong>Online Since: </strong></div>
+            <div class="col-sm-10" th:text="*{onlineSince}">Online Since</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2"><strong>Viewing Date: </strong></div>
+            <div class="col-sm-10" th:text="*{viewingDate}">Viewing Date</div>
+        </div>
+    </div>
+
+    <div class="col-sm-20 mt-3" sec:authorize="hasRole('TENANT')" th:if="${allowToSendApplication}">
+        <h4>Make a request</h4>
+        <form method="post" th:action="@{/viewing-offers/apply}" th:object="${request}">
+            <input type="hidden" th:field="*{offerId}" th:value="${offer.id}">
+            <div class="form-group row">
+                <label for="userDescription" class="col-sm-2 col-form-label">User Description</label>
+                <input id="userDescription"
+                       th:field="*{userDescription}"
+                       class="form-control col-sm-10"
+                       th:classappend="${#fields.hasErrors('userDescription')} ? is-invalid : ''"
+                       type="text" maxlength="150"
+                       required>
+                <div th:if="${#fields.hasErrors('userDescription')}" th:errors="*{userDescription}" class="invalid-feedback">
+                    error
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary form-contro mt-3">Request Appointment</button>
+        </form>
+    </div>
+</main>
+
+<footer th:replace="layout_fragments :: footer"></footer>
+</body>
+</html>

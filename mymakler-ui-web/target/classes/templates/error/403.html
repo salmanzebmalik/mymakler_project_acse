@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="layout_fragments :: head('MyMakler - Forbidden')"></head>
+
+<body>
+<nav th:replace="layout_fragments :: nav('error')"></nav>
+
+<main role="main" class="container">
+    <h1>
+        <span th:text="${status}">403</span>
+    </h1>
+    <span th:text="${message != '' ? message : 'Forbidden'}">Forbidden</span>
+</main>
+
+<footer th:replace="layout_fragments :: footer"></footer>
+</body>
+</html>

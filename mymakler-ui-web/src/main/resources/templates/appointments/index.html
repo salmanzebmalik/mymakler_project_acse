@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="layout_fragments :: head('MyMakler - Viewing Offers Overview')"></head>
+
+<body>
+<nav th:replace="layout_fragments :: nav('appointments')"></nav>
+
+<main role="main" class="container">
+    <h3 class="mb-4">Appointments</h3>
+
+    <p th:if="${#lists.isEmpty(appointments)}" class="table">You have no appointments</p>
+
+    <table th:unless="${#lists.isEmpty(appointments)}" class="table">
+        <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Address</th>
+            <th scope="col">Landlord</th>
+            <th scope="col">Landlord Remarks</th>
+            <th scope="col">Potential Tenant</th>
+            <th scope="col">Appointment Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="a : ${appointments}">
+            <td th:text="${a.request.requestedOffer.title}">Title</td>
+            <td th:text="${a.request.requestedOffer.postalCode} + '  ' + ${a.request.requestedOffer.city} + ', ' + ${a.request.requestedOffer.street}">Address</td>
+            <td th:text="${a.request.requestedOffer.offeringUser.username}">Landlord</td>
+            <td th:text="${a.offeringUserRemarks}">Landlord</td>
+            <td th:text="${a.request.requestingUser.username}">Potential tenant</td>
+            <td th:text="${a.request.requestedOffer.viewingDate}">Viewing date</td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+
+<footer th:replace="layout_fragments :: footer"></footer>
+</body>
+</html>

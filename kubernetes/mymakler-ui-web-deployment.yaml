@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mymakler-ui-web
+  namespace: mymakler
+  labels:
+    app: mymakler-ui-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mymakler-ui-web
+  template:
+    metadata:
+      labels:
+        app: mymakler-ui-web
+    spec:
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox
+          command: ['sh', '-c', 'until nc -z mysql 3306; do echo waiting for mysql; sleep 2; done;']
+      containers:
+        - name: mymakler-ui-web
+          image: salmanzebmalik/group-04-mymakler-ui-web:0.0.1
+          env:
+            - name: MYSQL_HOST
+              value: mysql.mymakler.svc.cluster.local
+            - name: MYSQL_PORT
+              value: "3306"
+            - name: MYSQL_DB
+              value: mymakler
+            - name: MYSQL_USERNAME
+              value: mymakler
+            - name: MYSQL_PASSWORD
+              value: mymakler
+            - name: MYMAKLER_SVC_API_URL
+              value: http://mymakler-svc-api.mymakler.svc.cluster.local:8080
+          ports:
+            - name: http
+              containerPort: 8080
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1024Mi"
+              cpu: "512m"

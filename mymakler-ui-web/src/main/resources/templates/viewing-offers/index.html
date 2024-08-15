@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head th:replace="layout_fragments :: head('MyMakler - Viewing Offer')"></head>
+
+<body>
+<nav th:replace="layout_fragments :: nav('overview')"></nav>
+
+<main role="main" class="container">
+    <h3 class="mb-4">Viewing Offer</h3>
+
+    <div th:if="${param.successfulRequest}" class="alert alert-success">
+        You have successfully requested an appointment.
+        <button type="button" class="close" data-dismiss="alert">
+            <a>&times;</a>
+        </button>
+    </div>
+
+    <p th:if="${#lists.isEmpty(offers)}" class="table">There are no offers</p>
+    <table th:unless="${#lists.isEmpty(offers)}" class="table">
+        <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Sq Meters</th>
+            <th scope="col">City</th>
+            <th scope="col">Street</th>
+            <th scope="col">Postal Code</th>
+            <th scope="col">Online Since</th>
+            <th scope="col">Landlord</th>
+            <th scope="col">See Details</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="o : ${offers}">
+            <td th:text="${o.title}">Title</td>
+            <td th:text="${o.sqMeters}">Sq Meters</td>
+            <td th:text="${o.city}">City</td>
+            <td th:text="${o.street}">Street</td>
+            <td th:text="${o.postalCode}">Postal Code</td>
+            <td th:text="${o.onlineSince}">Online Since</td>
+            <td th:text="${o.offeringUser.username}">Landlord</td>
+            <td scope="col">
+                <a class="btn btn-primary" th:href="@{/viewing-offers/{id}(id=${o.id})}" role="button">Details</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</main>
+
+<footer th:replace="layout_fragments :: footer"></footer>
+</body>
+</html>
